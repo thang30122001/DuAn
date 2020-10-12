@@ -5,6 +5,7 @@
  */
 package com.edusys.ui;
 
+import com.edusys.entity.NhanVien;
 import com.edusys.helper.DialogHelper;
 import com.edusys.helper.ShareHelper;
 import com.edusys.utils.Ximage;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.Timer;
+import com.edusys.helper.Auth;
 
 /**
  *
@@ -374,7 +376,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
 
     private void mniTKNguoiHocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTKNguoiHocActionPerformed
         // TODO add your handling code here:
-        openThongKe(1);
+        openThongKe(0);
     }//GEN-LAST:event_mniTKNguoiHocActionPerformed
 
     private void mniHuongDanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniHuongDanActionPerformed
@@ -424,17 +426,17 @@ public class EduSysJFrame extends javax.swing.JFrame {
 
     private void mniTKBangDemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTKBangDemActionPerformed
         // TODO add your handling code here:
-        openThongKe(2);
+        openThongKe(1);
     }//GEN-LAST:event_mniTKBangDemActionPerformed
 
     private void mniTKKhoaHocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTKKhoaHocActionPerformed
         // TODO add your handling code here:
-        openThongKe(3);
+        openThongKe(2);
     }//GEN-LAST:event_mniTKKhoaHocActionPerformed
 
     private void mniTKDoanhThuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTKDoanhThuActionPerformed
         // TODO add your handling code here:
-        openThongKe(4);
+        openThongKe(3);
     }//GEN-LAST:event_mniTKDoanhThuActionPerformed
 
     private void mniGioiThieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniGioiThieuActionPerformed
@@ -508,7 +510,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
     }
     void init() {
  setSize(1000, 600);
-// setIconImage(ShareHelper.APP_ICON);
+Ximage.getAppIcon();
  setLocationRelativeTo(null);
 
  new Timer(1000, new ActionListener() {
@@ -537,23 +539,38 @@ public class EduSysJFrame extends javax.swing.JFrame {
  }
  }
  void openThongKe(int index){
- if(ShareHelper.authenticated()){
- new ThongKeJDialog(this, true).setVisible(true);
+ if(Auth.isLogin()==false){
+     if(index==3&&!Auth.isManager()){
+         DialogHelper.alert(this,"Bạn không phải trưởng phòng");
+     }
+     else{
+     ThongKeJDialog tk=new ThongKeJDialog(this,true);
+     tk.setVisible(true);
+     tk.selectTab(index);
  }
+ }
+ 
  else{
- DialogHelper.alert(this, "Vui lòng đăng nhập!");
+     DialogHelper.alert(this,"Vui lòng đăng nhập");
  }
  }
  void openNhanVien(){
- if(ShareHelper.authenticated()){
- new QuanLyNhanVienJDialog(this, true).setVisible(true);
+ if(Auth.isLogin()==false){
+     if(!Auth.isManager()){
+         DialogHelper.alert(this,"Bạn không phải trưởng phòng");
+     }
+     else{
+     new QuanLyNhanVienJDialog(this,true).setVisible(true);
+     
  }
+ }
+ 
  else{
- DialogHelper.alert(this, "Vui lòng đăng nhập!");
+     DialogHelper.alert(this,"Vui lòng đăng nhập");
  }
  }
  void openKhoaHoc(){
- if(ShareHelper.authenticated()){
+ if(Auth.isLogin()==false){
  new QuanLyKhoaHocJDialog(this, true).setVisible(true);
  }
  else{
@@ -561,7 +578,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
  }
  }
  void openChuyenDe(){
- if(ShareHelper.authenticated()){
+ if(Auth.isLogin()==false){
  new QuanLyChuyenDeDialog(this, true).setVisible(true);
  }
  else{
@@ -569,7 +586,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
  }
  }
  void openNguoiHoc(){
- if(ShareHelper.authenticated()){new QuanLyNguoiHocJDialog(this, true).setVisible(true);
+ if(Auth.isLogin()==false){new QuanLyNguoiHocJDialog(this, true).setVisible(true);
  }
  else{
  DialogHelper.alert(this, "Vui lòng đăng nhập!");

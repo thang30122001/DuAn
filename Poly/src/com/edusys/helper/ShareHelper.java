@@ -74,7 +74,7 @@ public class ShareHelper {
  }
  /**
  * Kiểm tra xem đăng nhập hay chưa
- * @return đăng nhập hay chưa
+ * @return đăng nhập hay chưas
  */
  public static boolean authenticated() {
  return ShareHelper.USER != null;
