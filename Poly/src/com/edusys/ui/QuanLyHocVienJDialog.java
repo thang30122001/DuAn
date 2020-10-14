@@ -5,6 +5,21 @@
  */
 package com.edusys.ui;
 
+import com.edusys.dao.HocVienDao;
+import com.edusys.dao.NguoiHocDao;
+
+import com.edusys.entity.HocVien;
+import com.edusys.entity.NguoiHoc;
+import com.edusys.helper.DialogHelper;
+import com.edusys.helper.JdbcHelper;
+import com.edusys.utils.Ximage;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Admin
@@ -17,6 +32,15 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
     public QuanLyHocVienJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        init();
+        this.MaKH = MaKH;
+        this.fillComboBox();
+        this.fillGridView();
+
+    }
+
+    QuanLyHocVienJDialog(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -29,6 +53,7 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel3 = new javax.swing.JPanel();
         btnThem = new javax.swing.JButton();
         cboNguoiHoc = new javax.swing.JComboBox<>();
@@ -49,6 +74,12 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
         jPanel3.setEnabled(false);
 
         btnThem.setText("Thêm");
+
+        cboNguoiHoc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboNguoiHocItemStateChanged(evt);
+            }
+        });
 
         txtDiem.setText("-1");
 
@@ -83,19 +114,47 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Mã HV", "Mã NH", "Họ và tên", "Đi ...", "Xóa"
+                "Mã HV", "Mã NH", "Họ và tên", "Điểm", "Xóa"
             }
         ));
         jScrollPane2.setViewportView(tblGridView);
 
+        buttonGroup1.add(rdoTatCa);
         rdoTatCa.setSelected(true);
         rdoTatCa.setText("Tất cả");
+        rdoTatCa.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rdoTatCaStateChanged(evt);
+            }
+        });
+        rdoTatCa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoTatCaActionPerformed(evt);
+            }
+        });
 
+        buttonGroup1.add(rdoDaNhap);
         rdoDaNhap.setText("Đã nhập điểm");
+        rdoDaNhap.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rdoDaNhapStateChanged(evt);
+            }
+        });
+        rdoDaNhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoDaNhapActionPerformed(evt);
+            }
+        });
 
+        buttonGroup1.add(rdoChuaNhap);
         rdoChuaNhap.setText("Chưa nhập điểm");
 
         btnCapNhat.setText("Cập nhật");
+        btnCapNhat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapNhatActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -140,21 +199,16 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,6 +226,36 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void rdoTatCaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoTatCaActionPerformed
+        // TODO add your handling code here:
+        this.fillGridView();
+    }//GEN-LAST:event_rdoTatCaActionPerformed
+
+    private void rdoDaNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoDaNhapActionPerformed
+        // TODO add your handling code here:
+        this.fillGridView();
+    }//GEN-LAST:event_rdoDaNhapActionPerformed
+
+    private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
+        // TODO add your handling code here:
+        update();
+    }//GEN-LAST:event_btnCapNhatActionPerformed
+
+    private void cboNguoiHocItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboNguoiHocItemStateChanged
+        // TODO add your handling code here:
+//        this.fillGridView();
+    }//GEN-LAST:event_cboNguoiHocItemStateChanged
+
+    private void rdoTatCaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rdoTatCaStateChanged
+        // TODO add your handling code here:
+        this.fillGridView();
+    }//GEN-LAST:event_rdoTatCaStateChanged
+
+    private void rdoDaNhapStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rdoDaNhapStateChanged
+        // TODO add your handling code here:
+        this.fillGridView();
+    }//GEN-LAST:event_rdoDaNhapStateChanged
 
     /**
      * @param args the command line arguments
@@ -214,11 +298,94 @@ public class QuanLyHocVienJDialog extends javax.swing.JDialog {
             }
         });
     }
+    public Integer MaKH;
+    HocVienDao dao = new HocVienDao();
+    NguoiHocDao nhdao = new NguoiHocDao();
 
+    void init() {
+        Ximage.getAppIcon();
+        setLocationRelativeTo(null);
+    }
+
+    void fillComboBox() {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) cboNguoiHoc.getModel();
+        model.removeAllElements();
+        try {
+            List<NguoiHoc> list = nhdao.selectByCourse(MaKH);
+            for (NguoiHoc nh : list) {
+                model.addElement(nh);
+            }
+        } catch (Exception e) {
+            DialogHelper.alert(this, "Lỗi truy vấn học viên!");
+        }
+    }
+
+    void fillGridView() {
+        DefaultTableModel model = (DefaultTableModel) tblGridView.getModel();
+        model.setRowCount(0);
+        try {
+            String sql = "SELECT hv.*, nh.HoTen FROM HocVien hv "
+                    + " JOIN NguoiHoc nh ON nh.MaNH=hv.MaNH WHERE MaKH=?";
+            ResultSet rs = JdbcHelper.executeQuery(sql, MaKH);
+            while (rs.next()) {
+                double diem = rs.getDouble("Diem");
+                Object[] row = {rs.getInt("MaHV"), rs.getString("MaNH"),
+                    rs.getString("HoTen"), diem, false
+                };
+                if (rdoTatCa.isSelected()) {
+                    model.addRow(row);
+                } else if (rdoDaNhap.isSelected() && diem >= 0) {
+                    model.addRow(row);
+                } else if (rdoChuaNhap.isSelected() && diem < 0) {
+                    model.addRow(row);
+                }
+            }
+        } catch (SQLException e) {
+            DialogHelper.alert(this, "Lỗi truy vấn học viên!");
+        }
+    }
+
+    void insert() {
+        NguoiHoc nguoiHoc = (NguoiHoc) cboNguoiHoc.getSelectedItem();
+        HocVien model = new HocVien();
+        model.setMaKH(MaKH);
+        model.setMaNH(nguoiHoc.getMaNH());
+        model.setDiem(Double.valueOf(txtDiem.getText()));
+        try {
+            dao.insert(model);
+            this.fillComboBox();
+            this.fillGridView();
+        } catch (Exception e) {
+            DialogHelper.alert(this, "Lỗi thêm học viên vào khóa học!");
+        }
+    }
+
+    void update() {
+        for (int i = 0; i < tblGridView.getRowCount(); i++) {
+            Integer mahv = (Integer) tblGridView.getValueAt(i, 0);
+            String manh = (String) tblGridView.getValueAt(i, 1);
+            Double diem = (Double) tblGridView.getValueAt(i, 3);
+            Boolean isDelete = (Boolean) tblGridView.getValueAt(i, 4);
+            if (isDelete) {
+                dao.delete(mahv);
+            } else {
+                HocVien model = new HocVien();
+                model.setMaHV(mahv);
+                model.setMaKH(MaKH);
+                model.setMaNH(manh);
+                model.setDiem(diem);
+                dao.update(model);
+            }
+        }
+        this.fillComboBox();
+        this.fillGridView();
+        DialogHelper.alert(this, "Cập nhật thành công!");
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCapNhat;
     private javax.swing.JButton btnThem;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cboNguoiHoc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -36,7 +36,7 @@ Date NgayDK;
         this.MaNV = MaNV;
         this.NgayDK = NgayDK;
     }
-
+    
     public String getMaNH() {
         return MaNH;
     }

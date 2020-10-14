@@ -66,7 +66,13 @@ public class NguoiHocDao extends EduSysDao<NguoiHoc, String> {
         }
         return list.get(0);
     }
-
+public NguoiHoc selectById(Integer id) {
+        List<NguoiHoc> list = this.selectBySql("SELECT * FROM NguoiHoc WHERE MaNH=?", id);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
     @Override
     protected List<NguoiHoc> selectBySql(String sql, Object... args) {
         List<NguoiHoc> list = new ArrayList<NguoiHoc>();
@@ -98,7 +104,7 @@ public class NguoiHocDao extends EduSysDao<NguoiHoc, String> {
     }
 
     public List<NguoiHoc> selectByCourse(Integer makh) {
-        String sql = "SELECT * FROM NguoiHoc WHERE MaNH NOT IN (SELECT MaNH FROM HocVien WHERE MaKH=?)";
+        String sql = "SELECT Hoten FROM NguoiHoc WHERE MaNH NOT IN (SELECT MaNH FROM HocVien WHERE MaKH=?)";
         return selectBySql(sql, makh);
     }
 

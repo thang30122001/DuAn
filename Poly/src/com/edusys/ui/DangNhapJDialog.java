@@ -8,6 +8,7 @@ package com.edusys.ui;
 import java.awt.Color;
 import com.edusys.dao.NhanVienDao;
 import com.edusys.entity.NhanVien;
+import com.edusys.helper.Auth;
 import com.edusys.helper.DialogHelper;
 import com.edusys.helper.ShareHelper;
 
@@ -59,7 +60,11 @@ public class DangNhapJDialog extends javax.swing.JDialog {
 
         jLabel3.setText("Tên đăng nhập");
 
+        txtMaNV.setText("TeoNV");
+
         jLabel4.setText("Mật khẩu");
+
+        txtMatKhau.setText("123456");
 
         btnDangNhap.setText("Đăng nhập");
         btnDangNhap.addActionListener(new java.awt.event.ActionListener() {
@@ -193,7 +198,7 @@ public class DangNhapJDialog extends javax.swing.JDialog {
             if (nhanVien != null) {
                 String matKhau2 = nhanVien.getMatKhau();
                 if (matKhau.equals(matKhau2)) {
-//                    ShareHelper.USER = nhanVien;
+                    Auth.user = nhanVien;
                     DialogHelper.alert(this, "Đăng nhập thành công!");
                     this.dispose();
                 } else {

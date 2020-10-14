@@ -18,11 +18,11 @@ public class NhanVien {
 
     public NhanVien() {
     }
-
-    public NhanVien(String MaNV, String MatKhau, String HoTen, boolean VaiTro) {
+    
+    public NhanVien(String MaNV,String HoTen , String MatKhau, boolean VaiTro) {
         this.MaNV = MaNV;
-        this.MatKhau = MatKhau;
         this.HoTen = HoTen;
+        this.MatKhau = MatKhau;
         this.VaiTro = VaiTro;
     }
    

@@ -371,7 +371,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
     private void mniQLKhoaHocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniQLKhoaHocActionPerformed
         // TODO add your handling code here:
         openKhoaHoc();
-        
+
     }//GEN-LAST:event_mniQLKhoaHocActionPerformed
 
     private void mniTKNguoiHocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTKNguoiHocActionPerformed
@@ -387,7 +387,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
     private void mniQLChuyenDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniQLChuyenDeActionPerformed
         // TODO add your handling code here:
         openChuyenDe();
-        
+
     }//GEN-LAST:event_mniQLChuyenDeActionPerformed
 
     private void mniDangXuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDangXuatActionPerformed
@@ -397,7 +397,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
 
     private void mniQLChuyenDeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mniQLChuyenDeMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_mniQLChuyenDeMouseClicked
 
     private void mniDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDangNhapActionPerformed
@@ -407,6 +407,7 @@ public class EduSysJFrame extends javax.swing.JFrame {
 
     private void mniDoiMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDoiMatKhauActionPerformed
         // TODO add your handling code here
+        openDoiMatKhau();
     }//GEN-LAST:event_mniDoiMatKhauActionPerformed
 
     private void mniKetThucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniKetThucActionPerformed
@@ -508,101 +509,112 @@ public class EduSysJFrame extends javax.swing.JFrame {
             }
         });
     }
-    void init() {
- setSize(1000, 600);
-Ximage.getAppIcon();
- setLocationRelativeTo(null);
 
- new Timer(1000, new ActionListener() {
- SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a");
- @Override
- public void actionPerformed(ActionEvent e) {
- lblDongHo.setText(format.format(new Date()));
- }
- }).start();
- this.openWelcome();
- this.openLogin();
- }
- void openLogin(){
- new DangNhapJDialog(this, true).setVisible(true);
- }
- void openWelcome(){
- new ChaoJDialog(this, true).setVisible(true);
- }
- void logoff(){
+    void init() {
+        setSize(1000, 600);
+        Ximage.getAppIcon();
+        setLocationRelativeTo(null);
+
+        new Timer(1000, new ActionListener() {
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a");
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lblDongHo.setText(format.format(new Date()));
+            }
+        }).start();
+        this.openWelcome();
+        this.openLogin();
+    }
+
+    void openLogin() {
+        new DangNhapJDialog(this, true).setVisible(true);
+    }
+
+    void openWelcome() {
+        new ChaoJDialog(this, true).setVisible(true);
+    }
+
+    void logoff() {
 // ShareHelper.logoff();
- this.openLogin();
- }
- void exit(){
-  if(DialogHelper.confirm(this, "Bạn thực sự muốn kết thúc?")){
- System.exit(0);
- }
- }
- void openThongKe(int index){
- if(Auth.isLogin()==false){
-     if(index==3&&!Auth.isManager()){
-         DialogHelper.alert(this,"Bạn không phải trưởng phòng");
-     }
-     else{
-     ThongKeJDialog tk=new ThongKeJDialog(this,true);
-     tk.setVisible(true);
-     tk.selectTab(index);
- }
- }
- 
- else{
-     DialogHelper.alert(this,"Vui lòng đăng nhập");
- }
- }
- void openNhanVien(){
- if(Auth.isLogin()==false){
-     if(!Auth.isManager()){
-         DialogHelper.alert(this,"Bạn không phải trưởng phòng");
-     }
-     else{
-     new QuanLyNhanVienJDialog(this,true).setVisible(true);
-     
- }
- }
- 
- else{
-     DialogHelper.alert(this,"Vui lòng đăng nhập");
- }
- }
- void openKhoaHoc(){
- if(Auth.isLogin()==false){
- new QuanLyKhoaHocJDialog(this, true).setVisible(true);
- }
- else{
- DialogHelper.alert(this, "Vui lòng đăng nhập!");
- }
- }
- void openChuyenDe(){
- if(Auth.isLogin()==false){
- new QuanLyChuyenDeDialog(this, true).setVisible(true);
- }
- else{
- DialogHelper.alert(this, "Vui lòng đăng nhập!");
- }
- }
- void openNguoiHoc(){
- if(Auth.isLogin()==false){new QuanLyNguoiHocJDialog(this, true).setVisible(true);
- }
- else{
- DialogHelper.alert(this, "Vui lòng đăng nhập!");
- }
- }
- void openAbout(){
- new GioiThieuJDialog(this, true).setVisible(true);
- }
- void openWebsite(){
- try {
- Desktop.getDesktop().browse(new File("help/index.html").toURI());
- }
- catch (IOException ex) {
- DialogHelper.alert(this, "Không tìm thấy file hướng dẫn!");
- }
- }
+        this.openLogin();
+    }
+
+    void exit() {
+        if (DialogHelper.confirm(this, "Bạn thực sự muốn kết thúc?")) {
+            System.exit(0);
+        }
+    }
+
+    void openThongKe(int index) {
+        if (Auth.isLogin()) {
+//            if (index == 3 && !Auth.isManager()) {
+//                DialogHelper.alert(this, "Bạn không phải trưởng phòng");
+//            } else {
+//                ThongKeJDialog tk = new ThongKeJDialog(this, true);
+//                tk.setVisible(true);
+//                tk.selectTab(index);
+//            }
+//        } else {
+//            DialogHelper.alert(this, "Vui lòng đăng nhập");
+new ThongKeJDialog(this,true).setVisible(true);
+        }
+    }
+
+    void openNhanVien() {
+        if (Auth.isLogin()) {
+            if (!Auth.isManager()) {
+                DialogHelper.alert(this, "Bạn không phải trưởng phòng");
+            } else {
+                new QuanLyNhanVienJDialog(this, true).setVisible(true);
+
+            }
+        } else {
+            DialogHelper.alert(this, "Vui lòng đăng nhập");
+        }
+    }
+void openDoiMatKhau(){
+    if(Auth.isLogin()){
+        new DoiMatKhauJDialog(this,true).setVisible(true);
+    }
+    else
+    {DialogHelper.alert(this,"Vui lòng đăng nhập");}
+}
+    void openKhoaHoc() {
+        if (Auth.isLogin()) {
+            new QuanLyKhoaHocJDialog(this, true).setVisible(true);
+        } else {
+            DialogHelper.alert(this, "Vui lòng đăng nhập!");
+        }
+    }
+
+    void openChuyenDe() {
+        if (Auth.isLogin()) {
+            new QuanLyChuyenDeDialog(this, true).setVisible(true);
+        } else {
+            DialogHelper.alert(this, "Vui lòng đăng nhập!");
+        }
+    }
+
+    void openNguoiHoc() {
+        if (Auth.isLogin()  ) {
+            new QuanLyNguoiHocJDialog(this, true).setVisible(true);
+        } else {
+            DialogHelper.alert(this, "Vui lòng đăng nhập!");
+        }
+    }
+
+    void openAbout() {
+        new GioiThieuJDialog(this, true).setVisible(true);
+    }
+
+    void openWebsite() {
+        try {
+            Desktop.getDesktop().browse(new File("help/index.html").toURI());
+        } catch (IOException ex) {
+            DialogHelper.alert(this, "Không tìm thấy file hướng dẫn!");
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChuyenDe;
     private javax.swing.JButton btnDangXuat;
@@ -640,5 +652,4 @@ Ximage.getAppIcon();
     private javax.swing.JMenu mnuTroGiup;
     // End of variables declaration//GEN-END:variables
 
-  
 }

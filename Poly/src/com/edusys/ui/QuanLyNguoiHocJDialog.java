@@ -512,7 +512,10 @@ this.clear();
     }
 
     void clear() {
-this.setModel(new NguoiHoc());
+NguoiHoc model = new NguoiHoc();
+ model.setMaNV(Auth.user.getMaNV());
+ model.setNgayDK(DateHelper.now());
+ this.setModel(model);
     }
 
     void edit() {

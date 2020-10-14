@@ -56,10 +56,10 @@ public class ThongKeDao {
                 while (rs.next()) {
                     double diem = rs.getDouble("Diem");
                     String xepLoai = "Xuất sắc";
- if (diem < 0) {xepLoai = "Chưa nhập";
+                    if (diem < 0) {
+                        xepLoai = "Chưa nhập";
 
-}
- else if (diem < 3) {
+                    } else if (diem < 3) {
                         xepLoai = "Kém";
 
                     } else if (diem < 5) {
@@ -75,13 +75,12 @@ public class ThongKeDao {
                     } else if (diem < 9) {
                         xepLoai = "Giỏi";
 
-}
- Object[] model = {
+                    }
+                    Object[] model = {
                         rs.getString("MaNH"),
                         rs.getString("HoTen"),
                         diem,
-                        xepLoai
-                    };
+                        xepLoai};
                     list.add(model);
                 }
             } finally {
@@ -129,8 +128,7 @@ public class ThongKeDao {
                 rs = JdbcHelper.executeQuery(sql, nam);
                 while (rs.next()) {
                     Object[] model = {
-                        rs.getString("ChuyenDe"),
-                        rs.getInt("SoKH"),
+                        rs.getString("ChuyenDe"), rs.getInt("SoKH"),
                         rs.getInt("SoHV"),
                         rs.getDouble("DoanhThu"),
                         rs.getDouble("ThapNhat"),
@@ -147,5 +145,5 @@ public class ThongKeDao {
         }
         return list;
     }
-}
 
+}

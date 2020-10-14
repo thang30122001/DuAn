@@ -5,6 +5,15 @@
  */
 package com.edusys.ui;
 
+import com.edusys.dao.KhoaHocDao;
+import com.edusys.dao.ThongKeDao;
+import com.edusys.entity.KhoaHoc;
+import com.edusys.helper.Auth;
+import com.edusys.utils.Ximage;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Admin
@@ -17,6 +26,7 @@ public class ThongKeJDialog extends javax.swing.JDialog {
     public ThongKeJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+       init();
     }
 
     /**
@@ -84,8 +94,11 @@ public class ThongKeJDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Khóa học");
 
-        cboKhoaHoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PRO003", " " }));
-        cboKhoaHoc.setEnabled(false);
+        cboKhoaHoc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboKhoaHocItemStateChanged(evt);
+            }
+        });
 
         tblBangDiem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -159,6 +172,11 @@ public class ThongKeJDialog extends javax.swing.JDialog {
         jLabel3.setText("Năm");
 
         cboNam.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2020", "2021", "2018", " " }));
+        cboNam.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboNamItemStateChanged(evt);
+            }
+        });
 
         tblDoanhThu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -222,6 +240,16 @@ public class ThongKeJDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cboNamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboNamItemStateChanged
+        // TODO add your handling code here:
+//        fillTableDoanhThu();
+    }//GEN-LAST:event_cboNamItemStateChanged
+
+    private void cboKhoaHocItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboKhoaHocItemStateChanged
+        // TODO add your handling code here:
+        fillTableBangDiem();
+    }//GEN-LAST:event_cboKhoaHocItemStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -263,9 +291,88 @@ public class ThongKeJDialog extends javax.swing.JDialog {
             }
         });
     }
-   public void selectTab(int index){
-       tabs.setSelectedIndex(index);
-   }
+
+    public void selectTab(int index) {
+        tabs.setSelectedIndex(index);
+    }
+    ThongKeDao dao = new ThongKeDao();
+    KhoaHocDao khdao = new KhoaHocDao();
+
+    void init() {
+        Ximage.getAppIcon();
+        setLocationRelativeTo(null);
+        fillComboBoxKhoaHoc();
+        fillComboBoxNam();
+        fillTableBangDiem();
+        fillTableNguoiHoc();
+        fillTableKhoaHoc();
+//        fillTableDoanhThu();
+        this.selectTab(0);
+        if(!Auth.isManager()){
+            tabs.remove(3);
+        }
+    }
+
+    void fillComboBoxKhoaHoc() {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) cboKhoaHoc.getModel();
+        model.removeAllElements();
+        List<KhoaHoc> list = khdao.selectAll();
+        for (KhoaHoc kh : list) {
+            model.addElement(kh);
+        }
+        cboKhoaHoc.setSelectedIndex(0);
+    }
+
+    void fillComboBoxNam() {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) cboNam.getModel();
+        model.removeAllElements();
+        List<KhoaHoc> list = khdao.selectAll();
+        for (KhoaHoc kh : list) {
+            int nam = kh.getNgayKG().getYear() + 1900;
+            if (model.getIndexOf(nam) < 0) {
+                model.addElement(nam);
+            }
+        }
+        cboNam.setSelectedIndex(0);
+    }
+
+    void fillTableBangDiem() {
+        DefaultTableModel model = (DefaultTableModel) tblBangDiem.getModel();
+        model.setRowCount(0);
+        KhoaHoc kh = (KhoaHoc) cboKhoaHoc.getSelectedItem();
+        List<Object[]> list = dao.getBangDiem(kh.getMaKH());
+        for (Object[] row : list) {
+            model.addRow(row);
+        }
+    }
+
+    void fillTableNguoiHoc() {
+        DefaultTableModel model = (DefaultTableModel) tblNguoiHoc.getModel();
+        model.setRowCount(0);
+        List<Object[]> list = dao.getNguoiHoc();
+        for (Object[] row : list) {
+            model.addRow(row);
+        }
+    }
+
+    void fillTableKhoaHoc() {
+        DefaultTableModel model = (DefaultTableModel) tblTongHop.getModel();
+        model.setRowCount(0);
+        List<Object[]> list = dao.getDiemTheoChuyenDe();
+        for (Object[] row : list) {
+            model.addRow(row);
+        }
+    }
+
+//    void fillTableDoanhThu() {
+//        DefaultTableModel model = (DefaultTableModel) tblDoanhThu.getModel();
+//        model.setRowCount(0);
+//        int nam = (Integer)cboNam.getSelectedItem();
+//        List<Object[]> list = dao.getDoanhThu(nam);
+//        for (Object[] row : list) {
+//            model.addRow(row);
+//        }
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cboKhoaHoc;
     private javax.swing.JComboBox<String> cboNam;

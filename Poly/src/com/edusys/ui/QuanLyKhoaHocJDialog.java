@@ -5,6 +5,20 @@
  */
 package com.edusys.ui;
 
+import com.edusys.dao.ChuyenDeDao;
+import com.edusys.dao.KhoaHocDao;
+import com.edusys.entity.ChuyenDe;
+import com.edusys.entity.KhoaHoc;
+import com.edusys.helper.Auth;
+import com.edusys.helper.DateHelper;
+import com.edusys.helper.DialogHelper;
+import com.edusys.utils.Ximage;
+import java.awt.HeadlessException;
+import java.util.Date;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Admin
@@ -17,6 +31,11 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
     public QuanLyKhoaHocJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        init();
+this.fillComboBox();
+this.load();
+this.clear();
+this.setStatus(true);
     }
 
     /**
@@ -54,6 +73,7 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
         txtGhiChu = new javax.swing.JTextArea();
         cboChuyenDe = new javax.swing.JComboBox<>();
         txtMaNV = new javax.swing.JTextField();
+        btnStudents = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblGridView = new javax.swing.JTable();
@@ -79,8 +99,18 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
         txtNgayTao.setEnabled(false);
 
         btnUpdate.setText("Sửa");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnInsert.setText("Thêm");
+        btnInsert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInsertActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Xóa");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -90,14 +120,39 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
         });
 
         btnClear.setText("Mới");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         btnPrev.setText("<<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
 
         btnFirst.setText("|<");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
 
         btnNext.setText(">>");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         btnLast.setText(">|");
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Ngày khai giảng");
 
@@ -110,9 +165,25 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
         jScrollPane2.setViewportView(txtGhiChu);
 
         cboChuyenDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lập trình java cơ bản", " " }));
-        cboChuyenDe.setEnabled(false);
+        cboChuyenDe.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboChuyenDeItemStateChanged(evt);
+            }
+        });
+        cboChuyenDe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cboChuyenDeMouseClicked(evt);
+            }
+        });
 
         txtMaNV.setEnabled(false);
+
+        btnStudents.setText("Học Viên");
+        btnStudents.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStudentsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -135,23 +206,25 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
                                 .addComponent(btnDelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnClear)))
-                        .addGap(22, 22, 22)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 96, Short.MAX_VALUE)
+                                .addGap(22, 22, 22)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel5))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnStudents)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                                 .addComponent(btnFirst)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnPrev)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnNext)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnLast))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel5))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(btnLast))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(cboChuyenDe, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
@@ -210,7 +283,8 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
                     .addComponent(btnLast)
                     .addComponent(btnNext)
                     .addComponent(btnPrev)
-                    .addComponent(btnFirst))
+                    .addComponent(btnFirst)
+                    .addComponent(btnStudents))
                 .addContainerGap())
         );
 
@@ -224,6 +298,11 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
                 "Mã KH", "Chuyên đề", "Thời lượng", "Học phí", "Khai giảng", "Tạo bởi", "Ngày tạo"
             }
         ));
+        tblGridView.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblGridViewMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblGridView);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -270,7 +349,73 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        delete();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tblGridViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGridViewMouseClicked
+        // TODO add your handling code here:
+        
+ this.index = tblGridView.rowAtPoint(evt.getPoint());
+ if (this.index >= 0) {
+ this.edit();
+ tabs.setSelectedIndex(0);
+ }
+
+
+    }//GEN-LAST:event_tblGridViewMouseClicked
+
+    private void btnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertActionPerformed
+        // TODO add your handling code here:
+        insert();
+    }//GEN-LAST:event_btnInsertActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        update();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+        this.index = 0;
+this.edit();
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        this.index--;
+this.edit();
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        this.index++;
+this.edit();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        this.index = tblGridView.getRowCount() - 1;
+this.edit();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void cboChuyenDeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cboChuyenDeMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboChuyenDeMouseClicked
+
+    private void cboChuyenDeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboChuyenDeItemStateChanged
+        // TODO add your handling code here:
+        selectComboBox();
+    }//GEN-LAST:event_cboChuyenDeItemStateChanged
+
+    private void btnStudentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentsActionPerformed
+        // TODO add your handling code here:
+        this.openHocVien();
+    }//GEN-LAST:event_btnStudentsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -313,7 +458,163 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
             }
         });
     }
+    int index = 0;
+    KhoaHocDao dao = new KhoaHocDao();
+    ChuyenDeDao cddao = new ChuyenDeDao();
 
+    void init() {
+        Ximage.getAppIcon();
+        setLocationRelativeTo(null);
+    }
+
+    void load() {
+        DefaultTableModel model = (DefaultTableModel) tblGridView.getModel();
+        model.setRowCount(0);
+        try {
+            List<KhoaHoc> list = dao.selectAll();
+            for (KhoaHoc kh : list) {
+                Object[] row = {
+                    kh.getMaKH(),
+                    kh.getMaCD(),
+                    kh.getThoiLuong(),
+                    kh.getHocPhi(),
+                    DateHelper.toString(kh.getNgayKG()),
+                    kh.getMaNV(),
+                    DateHelper.toString(kh.getNgayTao())
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alert(this, "Lỗi truy vấn dữ liệu!");
+
+        }
+    }
+
+    void insert() {
+        KhoaHoc model = getModel();
+        model.setNgayTao(new Date());
+        try {
+            dao.insert(model);
+            this.load();
+            this.clear();
+            DialogHelper.alert(this, "Thêm mới thành công!");
+        } catch (HeadlessException e) {
+            DialogHelper.alert(this, "Thêm mới thất bại!");
+        }
+    }
+
+    void update() {
+        KhoaHoc model = getModel();
+        try {
+            dao.update(model);
+            this.load();
+            DialogHelper.alert(this, "Cập nhật thành công!");
+        } catch (Exception e) {
+            DialogHelper.alert(this, "Cập nhật thất bại!");
+        }
+    }
+
+    void delete() {
+        if (DialogHelper.confirm(this, "Bạn thực sự muốn xóa khóa học này?")) {
+            Integer makh = Integer.valueOf(cboChuyenDe.getToolTipText());
+            try {
+                dao.delete(makh);
+                this.load();
+                this.clear();
+                DialogHelper.alert(this, "Xóa thành công!");
+            } catch (Exception e) {
+                DialogHelper.alert(this, "Xóa thất bại!");
+            }
+        }
+    }
+
+    void clear() {
+        KhoaHoc model = new KhoaHoc();
+        ChuyenDe chuyenDe = (ChuyenDe) cboChuyenDe.getSelectedItem();
+        model.setMaCD(chuyenDe.getMaCD());
+        model.setMaNV(Auth.user.getMaNV());
+        model.setNgayKG(DateHelper.add(30));
+        model.setNgayTao(DateHelper.now());
+        this.setModel(model);
+    }
+
+    void edit() {
+        try {
+            Integer makh = (Integer) tblGridView.getValueAt(this.index, 0);
+            KhoaHoc model = dao.selectById(makh);
+            if (model != null) {
+                this.setModel(model);
+                this.setStatus(false);
+            }
+        } catch (Exception e) {
+            DialogHelper.alert(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
+
+    void setModel(KhoaHoc model
+    ) {
+        cboChuyenDe.setToolTipText(String.valueOf(model.getMaKH()));
+        cboChuyenDe.setSelectedItem(cddao.selectById(model.getMaCD()));
+        txtNgayKG.setText(DateHelper.toString(model.getNgayKG()));
+        txtHocPhi.setText(String.valueOf(model.getHocPhi()));
+        txtThoiLuong.setText(String.valueOf(model.getThoiLuong()));
+        txtMaNV.setText(model.getMaNV());
+        txtNgayTao.setText(DateHelper.toString(model.getNgayTao()));
+        txtGhiChu.setText(model.getGhiChu());
+    }
+
+    KhoaHoc getModel() {
+        KhoaHoc model = new KhoaHoc();
+        ChuyenDe chuyenDe = (ChuyenDe) cboChuyenDe.getSelectedItem();
+        model.setMaCD(chuyenDe.getMaCD());
+        model.setNgayKG(DateHelper.toDate(txtNgayKG.getText()));
+        model.setHocPhi(Double.valueOf(txtHocPhi.getText()));
+        model.setThoiLuong(Integer.valueOf(txtThoiLuong.getText()));
+        model.setGhiChu(txtGhiChu.getText());
+        model.setMaNV(Auth.user.getMaNV());
+        model.setNgayTao(DateHelper.toDate(txtNgayTao.getText()));
+        model.setMaKH(Integer.valueOf(cboChuyenDe.getToolTipText()));
+
+        return model;
+    }
+
+    void setStatus(boolean insertable
+    ) {
+        btnInsert.setEnabled(insertable);
+        btnUpdate.setEnabled(!insertable);
+        btnDelete.setEnabled(!insertable);
+        boolean first = this.index > 0;
+        boolean last = this.index < tblGridView.getRowCount() - 1;
+        btnFirst.setEnabled(!insertable && first);
+        btnPrev.setEnabled(!insertable && first);
+        btnLast.setEnabled(!insertable && last);
+        btnNext.setEnabled(!insertable && last);
+        btnStudents.setVisible(!insertable);
+    }
+
+    void selectComboBox() {
+        ChuyenDe chuyenDe = (ChuyenDe) cboChuyenDe.getSelectedItem();
+        txtThoiLuong.setText(String.valueOf(chuyenDe.getThoiLuong()));
+        txtHocPhi.setText(String.valueOf(chuyenDe.getHocPhi()));
+    }
+
+    void openHocVien() {
+        Integer id = Integer.valueOf(cboChuyenDe.getToolTipText());
+        new QuanLyHocVienJDialog(id).setVisible(true);
+    }
+
+    void fillComboBox() {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) cboChuyenDe.getModel();
+        model.removeAllElements();
+        try {
+            List<ChuyenDe> list = cddao.selectAll();
+            for (ChuyenDe cd : list) {
+                model.addElement(cd);
+            }
+        } catch (Exception e) {
+            DialogHelper.alert(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
@@ -322,6 +623,7 @@ public class QuanLyKhoaHocJDialog extends javax.swing.JDialog {
     private javax.swing.JButton btnLast;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrev;
+    private javax.swing.JButton btnStudents;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> cboChuyenDe;
     private javax.swing.JLabel jLabel1;
